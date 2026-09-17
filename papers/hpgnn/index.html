@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HPGNN: Leveraging Personalized PageRank and Higher-Order Topological Structures for Heterophily Mitigation in Graph Neural Networks.">
+  <meta name="theme-color" content="#ffffff">
+  <title>HPGNN | Yumeng Wang's Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="icon" href="../../assets/images/avatar.png">
+</head>
+<body class="paper-page">
+  <header class="masthead">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="home-link" href="../../#about">Homepage</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="../../#about">About Me</a>
+        <a href="../../#news">News</a>
+        <a href="../../#publications">Publications</a>
+        <a href="../../#experience">Experience</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="paper-shell">
+    <div class="paper-toolbar">
+      <a href="../../#publications"><i data-lucide="arrow-left" aria-hidden="true"></i>返回论文列表</a>
+      <span>IJCAI 2025 · CCF-A</span>
+    </div>
+
+    <header class="paper-hero">
+      <p class="eyebrow">HIGHER-ORDER GRAPH LEARNING · HETEROPHILY</p>
+      <h1>HPGNN</h1>
+      <p class="hero-subtitle">融合个性化 PageRank 与高阶拓扑结构，缓解图神经网络中的异配性</p>
+      <p class="hero-authors"><strong>Yumeng Wang</strong> · Zengyi Wo · Wenjun Wang · Xingcheng Fu · Minglai Shao</p>
+      <p class="hero-paper-title">Leveraging Personalized PageRank and Higher-Order Topological Structures for Heterophily Mitigation in Graph Neural Networks · IJCAI 2025</p>
+      <div class="hero-actions">
+        <a class="button primary" href="../../assets/papers/hpgnn-ijcai25.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
+        <a class="button secondary" href="https://github.com/streetcorner/HPGNN"><i data-lucide="github" aria-hidden="true"></i>代码</a>
+      </div>
+    </header>
+
+    <nav class="section-jump" aria-label="章节导航">
+      <a href="#motivation"><span>1</span>研究动机</a>
+      <a href="#method"><span>2</span>方法概述</a>
+      <a href="#results"><span>3</span>实验结果</a>
+      <a href="#resources"><span>4</span>资源与引用</a>
+    </nav>
+
+    <section id="motivation" class="paper-section">
+      <p class="section-kicker">01 · MOTIVATION</p>
+      <h2>从成对关系走向高阶拓扑交互</h2>
+      <p class="lead">传统图神经网络通常建立在同配性假设之上，即相连节点具有相似标签。然而现实网络中广泛存在异配连接：不同类别节点相互连接，邻域聚合会混入冲突类别信息，并在边界处形成噪声。</p>
+      <p>现有异配图方法大多仍围绕节点之间的成对关系建模，难以刻画由多个节点共同形成的多尺度复杂交互。HPGNN 从单纯复形的高阶拓扑视角出发，将 Personalized PageRank 的长程传播能力扩展到不同阶结构，在保持个性化信息的同时抑制异配噪声。</p>
+      <div class="metric-strip" aria-label="HPGNN summary metrics">
+        <div><strong>7</strong><span>real-world datasets</span></div>
+        <div><strong>5/7</strong><span>best-performing results</span></div>
+        <div><strong>2</strong><span>core modules: HiPPR + HiASC</span></div>
+      </div>
+    </section>
+
+    <section id="method" class="paper-section">
+      <p class="section-kicker">02 · METHOD</p>
+      <h2>三级框架：高阶构图、个性化传播、自适应卷积</h2>
+      <p class="lead">HPGNN 首先把原始图提升为单纯复形，再通过 Higher-order Personalized PageRank 建模跨阶长程依赖，最后利用 Higher-order Adaptive Spectral Convolution 融合不同阶的信息。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/hpgnn-architecture.png" alt="HPGNN framework with clique complex lifting, HiPPR, and HiASC">
+        <figcaption><strong>Fig. 1 · HPGNN 整体架构。</strong> 从左到右依次为高阶网络构建、Higher-order Personalized PageRank 计算，以及 Higher-order Adaptive Spectral Convolution。</figcaption>
+      </figure>
+      <div class="method-steps">
+        <article><span>1</span><div><h3>Constructing Higher-order Network</h3><p>通过 clique complex lifting 将边、三角形和更高阶完全子图映射为不同阶单纯形，显式编码超越节点对的群组交互。</p></div></article>
+        <article><span>2</span><div><h3>HiPPR</h3><p>把 PPR 扩展到高阶单纯结构，并使用高效近似算法计算长程依赖，从而兼顾局部个性化信息、传播范围与噪声控制。</p></div></article>
+        <article><span>3</span><div><h3>HiASC</h3><p>在不同阶 PPR 拉普拉斯上执行自适应谱卷积，学习各阶和各传播跳数的权重，最终拼接得到节点表示。</p></div></article>
+      </div>
+    </section>
+
+    <section id="results" class="paper-section">
+      <p class="section-kicker">03 · EXPERIMENTS</p>
+      <h2>在同配图与异配图上保持稳定优势</h2>
+      <p class="lead">实验覆盖 Cora、Citeseer、Photo 三个同配图，以及 Cornell、Actor、Texas、Wisconsin 四个异配图。HPGNN 在 7 个数据集中的 5 个取得最佳结果，同时在其余数据集保持竞争力。</p>
+      <figure class="research-figure">
+        <img src="../../assets/images/hpgnn-results.png" alt="Node classification accuracy of HPGNN and competing methods on seven datasets">
+        <figcaption><strong>Table 2 · 节点分类结果。</strong> HPGNN 在 Cora、Citeseer、Photo、Cornell 和 Wisconsin 上取得最优准确率，验证了高阶结构与个性化传播的互补作用。</figcaption>
+      </figure>
+
+      <div class="subsection-title">
+        <span>3.1 · ABLATION</span>
+        <h3>高阶结构与 PPR 缺一不可</h3>
+      </div>
+      <div class="figure-split">
+        <figure class="research-figure">
+          <img src="../../assets/images/hpgnn-ablation.png" alt="Ablation study comparing HPGNN with variants without higher-order structures or PPR">
+          <figcaption><strong>Fig. 2 · 模块消融。</strong> 移除高阶结构或 PPR 后，Wisconsin 和 Actor 等异配图上的性能下降更加明显。</figcaption>
+        </figure>
+        <div class="result-copy">
+          <p>仅保留成对 PPR 会失去高阶交互信息；用普通归一化邻接替代 PPR，则削弱了长程传播与噪声过滤能力。</p>
+          <p>完整 HPGNN 在 Wisconsin 上达到 <strong>94.8%</strong>，相比 GCN 提升 24.4 个百分点。结果说明两个组件分别解决“结构表达不足”和“异配传播噪声”问题，并形成互补。</p>
+        </div>
+      </div>
+
+      <div class="subsection-title">
+        <span>3.2 · REPRESENTATION</span>
+        <h3>学到更清晰的类别结构</h3>
+      </div>
+      <figure class="research-figure">
+        <img src="../../assets/images/hpgnn-visualization.png" alt="Representation visualization on Cora and Wisconsin comparing original graph, GPRGNN, and HPGNN">
+        <figcaption><strong>Fig. 5 · 表示空间可视化。</strong> 在 Cora 与 Wisconsin 上，HPGNN 得到的类别簇更紧凑、分离更清晰，尤其能改善复杂异配结构中的节点表示。</figcaption>
+      </figure>
+    </section>
+
+    <section id="resources" class="paper-section resources-section">
+      <p class="section-kicker">04 · RESOURCES</p>
+      <h2>论文、代码与引用</h2>
+      <div class="resource-links" aria-label="相关资源链接">
+        <a href="../../assets/papers/hpgnn-ijcai25.pdf"><i data-lucide="file-text" aria-hidden="true"></i><span><strong>Paper</strong><small>IJCAI 2025 PDF</small></span></a>
+        <a href="https://github.com/streetcorner/HPGNN"><i data-lucide="github" aria-hidden="true"></i><span><strong>Code</strong><small>Official implementation</small></span></a>
+        <a href="mailto:ymwang@tju.edu.cn"><i data-lucide="mail" aria-hidden="true"></i><span><strong>Contact</strong><small>ymwang@tju.edu.cn</small></span></a>
+      </div>
+      <div class="citation-block">
+        <div class="citation-heading"><h3>Citation</h3><button class="icon-button" type="button" data-copy-citation aria-label="Copy citation" title="Copy citation"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <pre><code>@inproceedings{wang2025leveraging,
+  title     = {Leveraging Personalized PageRank and Higher-Order
+               Topological Structures for Heterophily Mitigation
+               in Graph Neural Networks},
+  author    = {Wang, Yumeng and Wo, Zengyi and Wang, Wenjun and
+               Fu, Xingcheng and Shao, Minglai},
+  booktitle = {Proceedings of the Thirty-Fourth International Joint
+               Conference on Artificial Intelligence},
+  pages     = {6506--6514},
+  year      = {2025}
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="paper-footer">
+      <span>HPGNN · IJCAI 2025</span>
+      <a href="../../#publications">Yumeng Wang's Academic Homepage <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
