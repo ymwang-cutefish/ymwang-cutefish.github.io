@@ -101,14 +101,16 @@
       <p class="section-kicker">03 · FINE-TUNING</p>
       <h2>把预训练表示迁移到专家排序</h2>
       <p class="section-intro">下游阶段分别输入候选专家历史与目标问题，将 [ER]、[QR] 表示拼接后预测匹配分数。</p>
-      <figure class="research-figure wide-figure ssef-ranking-figure">
-        <img src="../../assets/images/ssef-finetuning.png" alt="SSEF fine-tuning architecture for expert ranking">
-        <figcaption><strong>Fine-tuning for expert ranking。</strong> 双编码器由同一 SSEF 检查点初始化，预测器输出候选专家与目标问题的匹配分数。</figcaption>
-      </figure>
-      <div class="method-steps">
-        <article><span>1</span><div><h3>Expert View</h3><p>从历史回答问题中提取专家表示。</p></div></article>
-        <article><span>2</span><div><h3>Question View</h3><p>独立编码目标问题的语义表示。</p></div></article>
-        <article><span>3</span><div><h3>Ranking Objective</h3><p>以已采纳回答者为正例，学习候选排序。</p></div></article>
+      <div class="ranking-layout">
+        <figure class="research-figure ssef-ranking-figure">
+          <img src="../../assets/images/ssef-finetuning.png" alt="SSEF fine-tuning architecture for expert ranking">
+          <figcaption><strong>Fine-tuning for expert ranking。</strong> 双编码器由同一 SSEF 检查点初始化，预测器输出候选专家与目标问题的匹配分数。</figcaption>
+        </figure>
+        <div class="method-steps">
+          <article><span>1</span><div><h3>Expert View</h3><p>从历史回答问题中提取专家表示。</p></div></article>
+          <article><span>2</span><div><h3>Question View</h3><p>独立编码目标问题的语义表示。</p></div></article>
+          <article><span>3</span><div><h3>Ranking Objective</h3><p>以已采纳回答者为正例，学习候选排序。</p></div></article>
+        </div>
       </div>
     </section>
 

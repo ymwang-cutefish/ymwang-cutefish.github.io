@@ -808,10 +808,34 @@ a {
   color: var(--ink);
 }
 
-.ssef-ranking-figure {
-  width: min(920px, 100%);
-  margin-right: auto;
-  margin-left: auto;
+.ranking-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 22px;
+}
+
+.ranking-layout .ssef-ranking-figure,
+.ranking-layout .method-steps {
+  margin-top: 0;
+}
+
+.ranking-layout .method-steps {
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ranking-layout .method-steps article {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.ranking-layout .method-steps article > span {
+  margin: 0;
 }
 
 .figure-grid {
@@ -1501,6 +1525,10 @@ a {
   .ssef-ranking-figure img {
     width: 100%;
     max-width: 100%;
+  }
+
+  .ranking-layout {
+    grid-template-columns: 1fr;
   }
 
   .scroll-figure {
