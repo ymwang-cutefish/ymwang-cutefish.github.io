@@ -327,13 +327,15 @@ a {
 
 .ssef-paper .paper-visual,
 .screc-paper .paper-visual,
-.topocor-paper .paper-visual {
+.topocor-paper .paper-visual,
+.benchmark-paper .paper-visual {
   background: white;
 }
 
 .ssef-paper .paper-visual img,
 .screc-paper .paper-visual img,
-.topocor-paper .paper-visual img {
+.topocor-paper .paper-visual img,
+.benchmark-paper .paper-visual img {
   padding: 11px 7px 7px;
   object-fit: contain;
 }
@@ -344,6 +346,10 @@ a {
 
 .topocor-paper .paper-visual img {
   padding: 14px 8px 8px;
+}
+
+.benchmark-paper .paper-visual img {
+  padding: 16px 8px 8px;
 }
 
 .venue-badge {
@@ -1241,12 +1247,18 @@ a {
 
   .method-steps article {
     display: grid;
-    grid-template-columns: 34px 1fr;
+    grid-template-columns: 34px minmax(0, 1fr);
     gap: 12px;
   }
 
   .method-steps article > span {
+    grid-row: 1 / span 2;
     margin: 0;
+  }
+
+  .method-steps article > h3,
+  .method-steps article > p {
+    grid-column: 2;
   }
 
   .motivation-grid img {

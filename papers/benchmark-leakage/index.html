@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Benchmark Leakage Trap: Can We Trust LLM-based Recommendation?">
+  <meta name="theme-color" content="#ffffff">
+  <title>Benchmark Leakage Trap | Yumeng Wang's Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=9">
+  <link rel="icon" href="../../assets/images/avatar.png">
+</head>
+<body class="paper-page">
+  <header class="masthead">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="home-link" href="../../#about">Homepage</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="../../#about">About Me</a>
+        <a href="../../#publications">Publications</a>
+        <a href="../../#experience">Experience</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="paper-shell">
+    <div class="paper-toolbar">
+      <a href="../../#publications"><i data-lucide="arrow-left" aria-hidden="true"></i>返回论文列表</a>
+      <span>WWW 2027 Manuscript</span>
+    </div>
+
+    <header class="paper-hero">
+      <p class="eyebrow">BENCHMARK RELIABILITY · LLM-BASED RECOMMENDATION</p>
+      <h1>Benchmark Leakage Trap</h1>
+      <p class="hero-subtitle">当推荐模型的基座已经接触过评测数据，结果还能代表真实能力吗？</p>
+      <p class="hero-authors"><strong>Yumeng Wang</strong> et al.</p>
+      <p class="hero-paper-title">Benchmark Leakage Trap: Can We Trust LLM-based Recommendation? · Manuscript in preparation for The Web Conference (WWW), 2027</p>
+      <div class="hero-actions">
+        <a class="button primary" href="../../assets/papers/benchmark-leakage-www27-manuscript.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
+      </div>
+      <nav class="section-jump five-items" aria-label="章节导航">
+        <a href="#motivation"><span>1</span>问题背景</a>
+        <a href="#method"><span>2</span>审计框架</a>
+        <a href="#results"><span>3</span>整体影响</a>
+        <a href="#analysis"><span>4</span>双重效应</a>
+        <a href="#citation"><span>5</span>引用</a>
+      </nav>
+    </header>
+
+    <section id="motivation" class="paper-section">
+      <p class="section-kicker">01 · MOTIVATION</p>
+      <h2>推荐评测可能测到的是“记忆”，而不是真实泛化能力</h2>
+      <p class="section-intro">LLM-based recommender 依赖大规模预训练模型理解用户与物品语义，但基座模型的训练数据通常不可见。一旦目标 benchmark 已经进入预训练或后续微调语料，测试结果就可能混入先验暴露带来的偏差。</p>
+      <div class="task-flow" aria-label="Benchmark leakage can distort recommendation evaluation">
+        <div><i data-lucide="database" aria-hidden="true"></i><h3>Target Benchmark</h3><p>用户交互与物品信息承担训练和评测双重角色。</p></div>
+        <i class="flow-arrow" data-lucide="arrow-right" aria-hidden="true"></i>
+        <div><i data-lucide="shield-alert" aria-hidden="true"></i><h3>Hidden Exposure</h3><p>LLM 在预训练或适配阶段接触 benchmark 模式。</p></div>
+        <i class="flow-arrow" data-lucide="arrow-right" aria-hidden="true"></i>
+        <div><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><h3>Distorted Evaluation</h3><p>性能可能虚高、下降，甚至改变模型间的排名。</p></div>
+      </div>
+      <p class="section-takeaway"><strong>关键问题：</strong>泄漏不是单向提升。它既可能把记忆误判为能力，也可能通过无关领域污染破坏原有表示，因此必须在受控条件下比较 clean 与 dirty backbone。</p>
+    </section>
+
+    <section id="method" class="paper-section">
+      <p class="section-kicker">02 · CONTROLLED AUDIT</p>
+      <h2>构造可控泄漏语料，隔离比较 Clean 与 Dirty LLM</h2>
+      <p class="section-intro">论文从目标 benchmark 采样 in-domain 数据，并从新闻、音乐、商品与位置等六类外部来源采样 out-of-domain 数据；随后只训练 LoRA adapter，把泄漏信息限制在增量参数中。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/benchmark-leakage-framework.png" alt="Experimental framework that mixes in-domain and out-of-domain data, injects the corpus through LoRA, and compares clean and dirty recommenders">
+        <figcaption><strong>Controlled leakage framework。</strong> 同一 Base LLM 分为 clean path 与 dirty path；后者通过 LoRA 注入混合泄漏语料，再在完全一致的下游配置中比较 AUC 与 UAUC。</figcaption>
+      </figure>
+      <div class="method-steps">
+        <article><span>1</span><h3>Leakage Construction</h3><p>以目标数据集的 10% 作为 ID 参照，并从六个外部数据源构造 OOD 污染。</p></article>
+        <article><span>2</span><h3>LoRA Injection</h3><p>冻结基础权重，只让低秩 adapter 学习泄漏模式，得到可控的 Dirty LLM。</p></article>
+        <article><span>3</span><h3>Matched Evaluation</h3><p>保持数据划分、超参数与推荐架构一致，将差异归因于 backbone 是否被污染。</p></article>
+      </div>
+    </section>
+
+    <section id="results" class="paper-section">
+      <p class="section-kicker">03 · OVERALL IMPACT</p>
+      <h2>混合泄漏会改变分数，也会重排模型优劣</h2>
+      <p class="section-intro">在 ML-1M 与 Amazon-Book 上，论文比较纯 LLMRec 与融合 collaborative signal 的 LLMRec+Collab. 方法。泄漏后的变化方向同时依赖数据集和架构：同一个方法可能在一个 benchmark 上升、在另一个 benchmark 下降。</p>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/benchmark-leakage-main-results.png" alt="AUC and UAUC before and after mixed data leakage on ML-1M and Amazon-Book">
+        <figcaption><strong>Table 1 · Mixed leakage。</strong> 10% ID 与 60% OOD 混合污染不仅带来显著的正负变化，还可能逆转方法间排名；AUC 与 UAUC 的变化趋势总体一致。</figcaption>
+      </figure>
+      <p class="section-takeaway">结果说明“被污染后分数更高”不能被解释为模型更强；评测必须同时说明基础模型的数据暴露风险与推荐架构对污染的敏感性。</p>
+    </section>
+
+    <section id="analysis" class="paper-section">
+      <p class="section-kicker">04 · LEAKAGE BEHAVIOR</p>
+      <h2>同域暴露制造虚假收益，跨域污染通常造成退化</h2>
+      <p class="section-intro">论文进一步把 ID 与 OOD 分开注入，并改变 OOD 数据来源，以观察泄漏强度、领域距离和推荐架构如何共同决定评测偏差。各表使用独立重采样语料，适合比较趋势而非跨表对齐绝对数值。</p>
+
+      <div class="subsection-title">
+        <span>4.1 · DUAL EFFECT</span>
+        <h3>泄漏的方向由数据与目标 benchmark 的关系决定</h3>
+      </div>
+      <div class="figure-grid analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/benchmark-leakage-id-effect.png" alt="AUC and UAUC changes under pure in-domain leakage on ML-1M">
+          <figcaption><strong>Pure ID leakage。</strong> 当泄漏数据直接来自目标域，三个代表性方法的 AUC 与 UAUC 均明显上升，形成可能被误认作泛化能力的虚假收益。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/benchmark-leakage-ood-effect.png" alt="AUC and UAUC changes under pure out-of-domain leakage on ML-1M">
+          <figcaption><strong>Pure OOD leakage。</strong> 仅注入跨域数据时，三个方法都出现明显下降，表明无关记忆会干扰推荐所需的用户—物品语义。</figcaption>
+        </figure>
+      </div>
+
+      <div class="subsection-title">
+        <span>4.2 · SOURCE DIVERGENCE</span>
+        <h3>结构相近的 OOD 来源影响较小，语义差异大的来源更具破坏性</h3>
+      </div>
+      <div class="figure-grid analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/benchmark-leakage-auc-sources.png" alt="AUC under Epinions, Last.fm, and Amazon-Sports out-of-domain injections">
+          <figcaption><strong>AUC by OOD source。</strong> 与 ML-1M 交互形式更接近的 Epinions 影响有限；Last.fm 与 Amazon-Sports 带来更明显下降。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/benchmark-leakage-uauc-sources.png" alt="UAUC under Epinions, Last.fm, and Amazon-Sports out-of-domain injections">
+          <figcaption><strong>UAUC by OOD source。</strong> 用户级指标复现相同趋势，说明污染效应并非只来自总体样本分布。</figcaption>
+        </figure>
+      </div>
+      <p class="analysis-conclusion">综合来看，benchmark leakage 是一个依赖领域、架构与数据组成的隐变量：同域记忆可造成虚高，跨域噪声可造成退化，而 collaborative signals 能在部分设置下提供额外的稳健性。</p>
+    </section>
+
+    <section id="citation" class="paper-section resources-section">
+      <p class="section-kicker">05 · CITATION</p>
+      <h2>引用</h2>
+      <div class="citation-block">
+        <div class="citation-heading"><h3>Citation</h3><button class="icon-button" type="button" data-copy-citation aria-label="Copy citation" title="Copy citation"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <pre><code>@unpublished{wang2027benchmarkleakage,
+  title  = {Benchmark Leakage Trap: Can We Trust
+            LLM-based Recommendation?},
+  author = {Wang, Yumeng and others},
+  note   = {Manuscript in preparation for The Web Conference
+            (WWW 2027)},
+  year   = {2027}
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="paper-footer">
+      <span>Benchmark Leakage Trap · WWW 2027 Manuscript</span>
+      <a href="../../#publications">Yumeng Wang's Academic Homepage <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
