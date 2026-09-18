@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SSEF: Dual-View Self-Supervised Pre-Training for Expert Finding.">
+  <meta name="theme-color" content="#ffffff">
+  <title>SSEF | Yumeng Wang's Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="icon" href="../../assets/images/avatar.png">
+</head>
+<body class="paper-page">
+  <header class="masthead">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="home-link" href="../../#about">Homepage</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="../../#about">About Me</a>
+        <a href="../../#publications">Publications</a>
+        <a href="../../#experience">Experience</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="paper-shell">
+    <div class="paper-toolbar">
+      <a href="../../#publications"><i data-lucide="arrow-left" aria-hidden="true"></i>返回论文列表</a>
+      <span>IJCAI 2026 · CCF-A</span>
+    </div>
+
+    <header class="paper-hero">
+      <p class="eyebrow">EXPERT FINDING · SELF-SUPERVISED PRE-TRAINING</p>
+      <h1>SSEF</h1>
+      <p class="hero-subtitle">从无标注问答社区数据联合预训练专家与问题表示</p>
+      <p class="hero-authors">Mingqiao Zhang · Hongtao Liu · Yinghui Wang · <strong>Yumeng Wang</strong> · Qiyao Peng</p>
+      <p class="hero-paper-title">Dual-View Self-Supervised Pre-Training for Expert Finding · IJCAI 2026</p>
+      <div class="hero-actions">
+        <a class="button primary" href="../../assets/papers/ssef-ijcai26.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
+        <a class="button secondary" href="https://www.ijcai.org/proceedings/2026/359"><i data-lucide="external-link" aria-hidden="true"></i>IJCAI 页面</a>
+      </div>
+      <nav class="section-jump five-items" aria-label="章节导航">
+        <a href="#motivation"><span>1</span>研究问题</a>
+        <a href="#pretraining"><span>2</span>双视图预训练</a>
+        <a href="#ranking"><span>3</span>专家排序</a>
+        <a href="#experiments"><span>4</span>实验分析</a>
+        <a href="#citation"><span>5</span>引用</a>
+      </nav>
+    </header>
+
+    <section id="motivation" class="paper-section">
+      <p class="section-kicker">01 · MOTIVATION</p>
+      <h2>专家发现需要同时理解“谁擅长什么”与“问题在问什么”</h2>
+      <p class="section-intro">给定目标问题与候选用户，模型按相关性排列专家。困难在于专家历史与问题语义常被分开建模，而可用于监督训练的专家-问题交互又十分稀疏。</p>
+      <div class="task-flow" role="img" aria-label="Expert finding ranks candidate experts for a target question">
+        <div><i data-lucide="circle-help" aria-hidden="true"></i><h3>目标问题</h3><p>编码当前问题的语义与意图</p></div>
+        <i class="flow-arrow" data-lucide="arrow-right" aria-hidden="true"></i>
+        <div><i data-lucide="users" aria-hidden="true"></i><h3>候选专家</h3><p>从历史回答刻画专业知识</p></div>
+        <i class="flow-arrow" data-lucide="arrow-right" aria-hidden="true"></i>
+        <div><i data-lucide="list-ordered" aria-hidden="true"></i><h3>相关性排序</h3><p>为每位候选人计算匹配分数</p></div>
+      </div>
+      <div class="result-summary">
+        <div><h3>单视图表示不足</h3><p>只强化问题表示会压缩专家历史；只强化专家表示又会弱化目标问题的细粒度语义。</p></div>
+        <div><h3>监督交互稀疏</h3><p>仅依赖已回答关系难以覆盖丰富的专家行为，也限制模型向低资源场景迁移。</p></div>
+      </div>
+      <p class="section-takeaway"><strong>SSEF 的思路：</strong>先利用大规模无标注 CQA 数据分别构造专家视图和问题视图，再以共享参数联合学习两类表示。</p>
+    </section>
+
+    <section id="pretraining" class="paper-section">
+      <p class="section-kicker">02 · DUAL-VIEW PRE-TRAINING</p>
+      <h2>共享语言模型，保留两种视图的专属结构</h2>
+      <p class="section-intro">专家视图串联用户曾回答的问题，问题视图编码目标问题；两侧共享 PLM 参数，并通过不同标记保留视图身份。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/ssef-dual-view.png" alt="SSEF dual-view input framework with expert histories and target questions sharing PLM parameters">
+        <figcaption><strong>Dual-view framework。</strong> [ER] 汇聚专家历史，[QR] 表示目标问题，[HSEP] 分隔多条历史记录。</figcaption>
+      </figure>
+
+      <div class="subsection-title">
+        <span>2.1 · VIEW-SPECIFIC LEARNING</span>
+        <h3>针对专家行为与问题文本分别增强</h3>
+      </div>
+      <div class="figure-grid analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/ssef-augmentation.png" alt="View-specific reorder and crop augmentations for expert histories and questions">
+          <figcaption><strong>视图专属增强。</strong> 专家历史在行为序列层面重排或裁剪；问题在词序列层面重排或裁剪。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/ssef-pretraining.png" alt="Contrastive pre-training with positive original-augmented pairs and in-batch negatives">
+          <figcaption><strong>自监督预训练。</strong> 原始样本与其增强版本构成正对，同批其他实例作为负样本。</figcaption>
+        </figure>
+      </div>
+      <p class="section-takeaway">SSEF 同时优化专家对比、问题对比与掩码语言建模目标，使共享编码器既学习跨视图知识，又保留各自的结构特征。</p>
+    </section>
+
+    <section id="ranking" class="paper-section">
+      <p class="section-kicker">03 · FINE-TUNING</p>
+      <h2>把预训练表示迁移到专家排序</h2>
+      <p class="section-intro">下游阶段分别输入候选专家历史与目标问题，将 [ER]、[QR] 表示拼接后预测匹配分数。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/ssef-finetuning.png" alt="SSEF fine-tuning architecture for expert ranking">
+        <figcaption><strong>Fine-tuning for expert ranking。</strong> 双编码器由同一 SSEF 检查点初始化，预测器输出候选专家与目标问题的匹配分数。</figcaption>
+      </figure>
+      <div class="method-steps">
+        <article><span>1</span><div><h3>Expert View</h3><p>从历史回答问题中提取专家表示。</p></div></article>
+        <article><span>2</span><div><h3>Question View</h3><p>独立编码目标问题的语义表示。</p></div></article>
+        <article><span>3</span><div><h3>Ranking Objective</h3><p>以已采纳回答者为正例，学习候选排序。</p></div></article>
+      </div>
+    </section>
+
+    <section id="experiments" class="paper-section">
+      <p class="section-kicker">04 · EXPERIMENTS</p>
+      <h2>准确性、低资源鲁棒性与迁移能力</h2>
+      <p class="section-intro">实验从主结果、预训练任务消融、低标注比例、跨模型复用与跨域零样本迁移五个角度验证 SSEF。</p>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/ssef-results.png" alt="Expert finding results of SSEF and baseline methods on six CQA datasets">
+        <figcaption><strong>Table 1 · 主结果。</strong> SSEF 在六个 CQA 数据集与四项排序指标上整体取得稳定提升，说明双视图预训练可缓解稀疏监督带来的限制。</figcaption>
+      </figure>
+
+      <div class="subsection-title">
+        <span>4.1 · DATA EFFICIENCY &amp; REUSE</span>
+        <h3>标注越少，预训练表示的价值越明显</h3>
+      </div>
+      <div class="figure-grid analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/ssef-low-label.png" alt="SSEF performance under decreasing fine-tuning data ratios on CodeReview and Biology">
+          <figcaption><strong>Fig. 6 · 低标注比例。</strong> 训练数据减少时，SSEF 相对 PMEF 的优势扩大；在更稀疏的 CodeReview 上尤为明显。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/ssef-cross-model.png" alt="PMEF and MATER performance with frozen SSEF representations">
+          <figcaption><strong>Fig. 7 · 跨模型复用。</strong> 将冻结的 SSEF 表示加入 PMEF 与 MATER 后，四项排序指标均得到改善。</figcaption>
+        </figure>
+      </div>
+
+      <div class="subsection-title">
+        <span>4.2 · TRANSFER &amp; AUGMENTATION</span>
+        <h3>表示可以跨域迁移，增强策略需匹配视图</h3>
+      </div>
+      <div class="figure-grid analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/ssef-zero-shot.png" alt="Zero-shot expert finding results after fine-tuning on Biology and testing on Es and Electronics">
+          <figcaption><strong>Table 3 · 零样本迁移。</strong> 仅在 Biology 微调后直接测试 Es 与 Electronics，模型仍保留有效的跨域排序能力。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/ssef-augmentation-analysis.png" alt="Performance comparison of crop, reorder, and mixture augmentations for expert and question views">
+          <figcaption><strong>Fig. 5 · 增强策略。</strong> 专家视图通常更适合 reorder，问题视图更偏向 crop；混合增强并非始终最优。</figcaption>
+        </figure>
+      </div>
+
+      <div class="subsection-title">
+        <span>4.3 · PRE-TRAINING TASKS</span>
+        <h3>双视图联合预训练优于单独建模</h3>
+      </div>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/ssef-ablation.png" alt="Ablation comparing SSEF with question-only, expert-only, and original BERT variants">
+        <figcaption><strong>Table 2 · 预训练任务消融。</strong> Original BERT 最弱，Only ER 通常优于 Only QR，完整 SSEF 表现最佳，验证两种视图的互补性。</figcaption>
+      </figure>
+    </section>
+
+    <section id="citation" class="paper-section resources-section">
+      <p class="section-kicker">05 · CITATION</p>
+      <h2>引用</h2>
+      <div class="citation-block">
+        <div class="citation-heading"><h3>Citation</h3><button class="icon-button" type="button" data-copy-citation aria-label="Copy citation" title="Copy citation"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <pre><code>@inproceedings{zhang2026dual,
+  title     = {Dual-View Self-Supervised Pre-Training for Expert Finding},
+  author    = {Zhang, Mingqiao and Liu, Hongtao and Wang, Yinghui and
+               Wang, Yumeng and Peng, Qiyao},
+  booktitle = {Proceedings of the Thirty-Fifth International Joint
+               Conference on Artificial Intelligence},
+  pages     = {3232--3240},
+  year      = {2026},
+  doi       = {10.24963/ijcai.2026/359}
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="paper-footer">
+      <span>SSEF · IJCAI 2026</span>
+      <a href="../../#publications">Yumeng Wang's Academic Homepage <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
