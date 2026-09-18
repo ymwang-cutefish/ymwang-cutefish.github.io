@@ -326,17 +326,23 @@ a {
 }
 
 .ssef-paper .paper-visual,
-.screc-paper .paper-visual {
+.screc-paper .paper-visual,
+.topocor-paper .paper-visual {
   background: white;
 }
 
 .ssef-paper .paper-visual img,
-.screc-paper .paper-visual img {
+.screc-paper .paper-visual img,
+.topocor-paper .paper-visual img {
   padding: 11px 7px 7px;
   object-fit: contain;
 }
 
 .screc-paper .paper-visual img {
+  padding: 14px 8px 8px;
+}
+
+.topocor-paper .paper-visual img {
   padding: 14px 8px 8px;
 }
 
@@ -868,6 +874,16 @@ a {
   margin: 0 auto;
 }
 
+.topocor-motivation-grid img {
+  height: 330px;
+}
+
+.topocor-crossmodal-figure {
+  max-width: 820px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .section-takeaway {
   margin: 22px 0 0;
   padding: 15px 18px;
@@ -926,6 +942,10 @@ a {
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
   margin-top: 16px;
+}
+
+.topocor-method-steps {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .method-steps article {
@@ -1030,6 +1050,10 @@ a {
 
 .screc-analysis-grid img {
   height: 285px;
+}
+
+.topocor-analysis-grid img {
+  height: 290px;
 }
 
 .analysis-conclusion {

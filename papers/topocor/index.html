@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TopoCor: Topological Corroboration via Simplicial Closures for Heterophilic Multimodal Graph Clustering.">
+  <meta name="theme-color" content="#ffffff">
+  <title>TopoCor | Yumeng Wang's Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=7">
+  <link rel="icon" href="../../assets/images/avatar.png">
+</head>
+<body class="paper-page">
+  <header class="masthead">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="home-link" href="../../#about">Homepage</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="../../#about">About Me</a>
+        <a href="../../#publications">Publications</a>
+        <a href="../../#experience">Experience</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="paper-shell">
+    <div class="paper-toolbar">
+      <a href="../../#publications"><i data-lucide="arrow-left" aria-hidden="true"></i>返回论文列表</a>
+      <span>AAAI 2027 Submission</span>
+    </div>
+
+    <header class="paper-hero">
+      <p class="eyebrow">MULTIMODAL GRAPH CLUSTERING · HETEROPHILY · SIMPLICIAL CLOSURES</p>
+      <h1>TopoCor</h1>
+      <p class="hero-subtitle">用单纯形闭合为模态内与模态间的异配证据提供拓扑佐证</p>
+      <p class="hero-authors"><strong>Yumeng Wang</strong> · et al.</p>
+      <p class="hero-paper-title">Topological Corroboration via Simplicial Closures for Heterophilic Multimodal Graph Clustering · AAAI 2027 Conference Submission</p>
+      <div class="hero-actions">
+        <a class="button primary" href="../../assets/papers/topocor-aaai27-submission.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
+      </div>
+      <nav class="section-jump five-items" aria-label="章节导航">
+        <a href="#motivation"><span>1</span>研究动机</a>
+        <a href="#method"><span>2</span>方法概述</a>
+        <a href="#results"><span>3</span>主要结果</a>
+        <a href="#analysis"><span>4</span>分析验证</a>
+        <a href="#citation"><span>5</span>引用</a>
+      </nav>
+    </header>
+
+    <section id="motivation" class="paper-section">
+      <p class="section-kicker">01 · MOTIVATION</p>
+      <h2>检测到节点差异，并不等于理解了差异的结构语境</h2>
+      <p class="section-intro">多模态图聚类通常用高频通道捕捉异配差异，但单条边上的差异仍然结构欠定：它既可能是孤立噪声，也可能属于由局部闭合共同支撑的边界模式。TopoCor 用单纯形闭合补充这种缺失的高阶语境。</p>
+      <div class="figure-grid motivation-grid topocor-motivation-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/topocor-motivation-closure.png" alt="Hexbin comparison showing that simplex closure responses differ from two-hop aggregation">
+          <figcaption><strong>闭合不是更深的成对传播。</strong> 2-hop aggregation 描述路径可达性，而 simplex response 要求边真正闭合为三角形，两者保留的是不同结构信息。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/topocor-motivation-frequency.png" alt="Comparison of pairwise frequency encoding and topological corroboration on Ele-Fashion">
+          <figcaption><strong>闭合语境补足高频证据。</strong> 在 Ele-Fashion 上加入 topological corroboration 后，高频信息得到更充分利用，并带来整体聚类收益。</figcaption>
+        </figure>
+      </div>
+      <figure class="research-figure topocor-crossmodal-figure">
+        <img src="../../assets/images/topocor-motivation-crossmodal.png" alt="Performance comparison between frequency channels, conventional fusion, and explicit cross-modal closure modeling">
+        <figcaption><strong>跨模态闭合需要显式构造。</strong> 表示级拼接或注意力只能混合单模态结果；由不同模态边共同形成的闭合，必须在融合前被识别并按来源回流。</figcaption>
+      </figure>
+      <p class="section-takeaway"><strong>核心直觉：</strong>TopoCor 不把三角形当成边界真实性的证明，而是用闭合提供 interaction-order context，让成对高频差异从孤立事件变成可被结构化解释的证据。</p>
+    </section>
+
+    <section id="method" class="paper-section">
+      <p class="section-kicker">02 · METHOD</p>
+      <h2>从频率分解出发，在模态内与跨模态两层完成拓扑佐证</h2>
+      <p class="section-intro">TopoCor 保留共享低频簇内部作为稳定锚点，同时在各模态的高频支撑上构造 clique complex；随后分别建模边与三角形，并把新的闭合证据以残差方式注入成对表示。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/topocor-framework.png" alt="TopoCor framework with frequency decomposition, within-modal simplicial corroboration, relation-frequency decoupled calibration, and cross-modal closure corroboration">
+        <figcaption><strong>TopoCor framework。</strong> 频率分解提供低频内部与高频锚点，WMSC 处理模态内不同交互阶次，RFDC 分频率校准关系视图，CMCC 再把跨模态联合闭合按边来源路由回各模态。</figcaption>
+      </figure>
+      <div class="method-steps topocor-method-steps">
+        <article><span>1</span><h3>Frequency Decomposition</h3><p>构造共享低频支撑和模态特异高频支撑，分离稳定簇内部与候选异配差异。</p></article>
+        <article><span>2</span><h3>WMSC</h3><p>把高频支撑提升为 clique complex，以阶特定 Bernstein filters 分别编码边与三角形。</p></article>
+        <article><span>3</span><h3>RFDC</h3><p>在低频和高频通道中独立学习关系权重，使关系贡献与频率角色相匹配。</p></article>
+        <article><span>4</span><h3>CMCC</h3><p>提取仅由多模态边联合形成的闭合，并通过 provenance-aware routing 注入互补证据。</p></article>
+      </div>
+    </section>
+
+    <section id="results" class="paper-section topocor-results">
+      <p class="section-kicker">03 · MAIN RESULTS</p>
+      <h2>在多模态与多关系图聚类中保持一致优势</h2>
+      <p class="section-intro">实验覆盖多模态 IMDB、Amazon、Ele-Fashion，以及多关系 ACM、DBLP、Yelp；使用 ACC、NMI 和 ARI 评估聚类质量，并与多模态编码、图滤波和多关系融合方法比较。</p>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/topocor-results-multimodal.png" alt="Clustering performance of TopoCor and baselines on IMDB, Amazon, and Ele-Fashion">
+        <figcaption><strong>Table 1 · Multimodal graph clustering。</strong> 在图像、文本等异构模态共存的场景中，TopoCor 对三项指标均保持稳定提升，说明显式闭合语境能补充表示级融合。</figcaption>
+      </figure>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/topocor-results-multirelation.png" alt="Clustering performance of TopoCor and baselines on ACM, DBLP, and Yelp">
+        <figcaption><strong>Table 2 · Multi-relational graph clustering。</strong> 在关系密度与语义差异明显的数据上，分频率的关系校准与闭合佐证共同提升了聚类表现。</figcaption>
+      </figure>
+    </section>
+
+    <section id="analysis" class="paper-section">
+      <p class="section-kicker">04 · ANALYSIS</p>
+      <h2>组件消融与表示分析共同解释拓扑佐证如何发挥作用</h2>
+      <p class="section-intro">论文进一步检查不同输入结构下的模块分工、闭合证据的注入方式、学习到的表示几何，以及关系权重和邻域规模的稳定性。</p>
+
+      <div class="subsection-title">
+        <span>4.1 · COMPONENTS &amp; MECHANISMS</span>
+        <h3>不同模块对应不同结构条件，闭合证据需要保留阶次与来源</h3>
+      </div>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/topocor-ablation.png" alt="TopoCor component ablations on multimodal Ele-Fashion and multi-relational DBLP">
+        <figcaption><strong>Component ablation。</strong> 多模态 Ele-Fashion 同时依赖 WMSC 与 CMCC；在单模态多关系 DBLP 上，RFDC 的作用更突出，表明模块贡献随输入结构而变化。</figcaption>
+      </figure>
+      <figure class="research-figure scroll-figure topocor-mechanism-figure">
+        <img src="../../assets/images/topocor-mechanism-tables.png" alt="Detailed ablations of WMSC interaction order, orthogonal residual injection, CMCC provenance routing, and unimodal closure exclusion">
+        <figcaption><strong>WMSC / CMCC decomposition。</strong> order-2 incidence、正交残差、来源感知路由与单模态闭合排除均有贡献：高阶证据应当补充而非覆盖成对锚点，跨模态证据也必须是新的且可归因。</figcaption>
+      </figure>
+
+      <div class="subsection-title">
+        <span>4.2 · REPRESENTATION GEOMETRY</span>
+        <h3>闭合佐证让高频差异形成更连贯的聚类结构</h3>
+      </div>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/topocor-tsne.png" alt="t-SNE visualization of node representations learned by UniGraph2, DGF, DMGC, and TopoCor on Amazon">
+        <figcaption><strong>t-SNE on Amazon。</strong> 相比 UniGraph2、DGF 与 DMGC，TopoCor 学到的类内邻域更紧凑、类间混合更少，并获得更高的 Silhouette coefficient。</figcaption>
+      </figure>
+
+      <div class="subsection-title">
+        <span>4.3 · CALIBRATION &amp; ROBUSTNESS</span>
+        <h3>关系作用依赖频率通道，闭合佐证也提升邻域扩张稳定性</h3>
+      </div>
+      <div class="figure-grid analysis-grid topocor-analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/topocor-relation-weights.png" alt="Low- and high-frequency relation weights learned by TopoCor on DBLP">
+          <figcaption><strong>Relation-frequency weights。</strong> DBLP 的稀疏关系更偏向低频通道，稠密关系更偏向高频通道，支持按频率分别校准关系贡献。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/topocor-sensitivity.png" alt="Sensitivity of TopoCor and DMGC to homophilic and heterophilic neighborhood sizes on DBLP">
+          <figcaption><strong>Neighborhood sensitivity。</strong> 随同配或异配邻域扩大，TopoCor 在更宽范围内保持稳定，而 DMGC 更容易因低置信度边增加而下降。</figcaption>
+        </figure>
+      </div>
+      <p class="analysis-conclusion">整体证据支持同一结论：TopoCor 的收益不来自简单增加三角形，而来自对交互阶次、成对锚点、跨模态来源和频率角色的联合约束。</p>
+    </section>
+
+    <section id="citation" class="paper-section resources-section">
+      <p class="section-kicker">05 · CITATION</p>
+      <h2>引用</h2>
+      <div class="citation-block">
+        <div class="citation-heading"><h3>Citation</h3><button class="icon-button" type="button" data-copy-citation aria-label="Copy citation" title="Copy citation"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <pre><code>@unpublished{wang2027topocor,
+  title  = {Topological Corroboration via Simplicial Closures for
+            Heterophilic Multimodal Graph Clustering},
+  author = {Wang, Yumeng and others},
+  note   = {AAAI 2027 Conference Submission},
+  year   = {2027}
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="paper-footer">
+      <span>TopoCor · AAAI 2027 Conference Submission</span>
+      <a href="../../#publications">Yumeng Wang's Academic Homepage <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>
