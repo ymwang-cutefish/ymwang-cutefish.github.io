@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Beyond Context-Decoupled Propagation: Context-Coupled Multimodal Graph Learning for Recommendation.">
+  <meta name="theme-color" content="#ffffff">
+  <title>CC-MGRec | Yumeng Wang's Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <link rel="icon" href="../../assets/images/avatar.png">
+</head>
+<body class="paper-page">
+  <header class="masthead">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="home-link" href="../../#about">Homepage</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="../../#about">About Me</a>
+        <a href="../../#publications">Publications</a>
+        <a href="../../#experience">Experience</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="paper-shell">
+    <div class="paper-toolbar">
+      <a href="../../#publications"><i data-lucide="arrow-left" aria-hidden="true"></i>返回论文列表</a>
+      <span>WWW 2027 Manuscript</span>
+    </div>
+
+    <header class="paper-hero">
+      <p class="eyebrow">MULTIMODAL RECOMMENDATION · CONTEXT-COUPLED PROPAGATION</p>
+      <h1>CC-MGRec</h1>
+      <p class="hero-subtitle">让视觉、文本与协同关系在同一传播上下文中共同演化</p>
+      <p class="hero-authors"><strong>Yumeng Wang</strong> et al.</p>
+      <p class="hero-paper-title">Beyond Context-Decoupled Propagation: Context-Coupled Multimodal Graph Learning for Recommendation · Manuscript in preparation for The Web Conference (WWW), 2027</p>
+      <div class="hero-actions">
+        <a class="button primary" href="../../assets/papers/ccmgrec-www27-manuscript.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
+      </div>
+      <nav class="section-jump five-items" aria-label="章节导航">
+        <a href="#motivation"><span>1</span>研究动机</a>
+        <a href="#method"><span>2</span>方法框架</a>
+        <a href="#results"><span>3</span>推荐表现</a>
+        <a href="#analysis"><span>4</span>机制验证</a>
+        <a href="#citation"><span>5</span>引用</a>
+      </nav>
+    </header>
+
+    <section id="motivation" class="paper-section">
+      <p class="section-kicker">01 · MOTIVATION</p>
+      <h2>问题不在证据不足，而在传播上下文被拆散</h2>
+      <p class="section-intro">现有多模态图推荐通常为视觉、文本或不同关系维护独立分支，直到传播结束才融合表示。这样既阻断 collaborative-semantic bridge，也让视觉与文本信息无法共同塑造同一个中间节点状态。</p>
+      <figure class="research-figure topocor-crossmodal-figure">
+        <img src="../../assets/images/ccmgrec-motivation.png" alt="Evidence of relation fragmentation and visual-textual evidence fragmentation in multimodal recommendation">
+        <figcaption><strong>Context fragmentation diagnostics。</strong> Held-out positives 更常由 collaborative-semantic bridge 触达；当样本更依赖视觉—文本组合路径时，移除这些路径造成的推荐损失也更明显。</figcaption>
+      </figure>
+      <p class="section-takeaway"><strong>核心观察：</strong>late fusion 只能合并已经完成的分支表示，无法补回传播过程中没有发生的跨关系、跨模态组合。</p>
+    </section>
+
+    <section id="method" class="paper-section">
+      <p class="section-kicker">02 · METHOD</p>
+      <h2>校准语义关系，并在一个共享算子中传播单一表示流</h2>
+      <p class="section-intro">CC-MGRec 不额外引入证据，而是重新组织已有的视觉、文本和训练交互：先用训练行为校准内容关系，再将语义关系与观察到的协同关系放入同一图中，最后用共享归一化完成组合传播。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/ccmgrec-framework.png" alt="CC-MGRec framework with recommendation-grounded semantic calibration, context-coupled multimodal graph construction, and collaborative-semantic compositional propagation">
+        <figcaption><strong>CC-MGRec framework。</strong> RGSC 重新分配固定候选语义支持的权重；CC-MG 统一语义边、观察交互与多模态节点信息；CSCP 在单一状态流中组合 collaborative 与 semantic transitions。</figcaption>
+      </figure>
+      <div class="method-steps">
+        <article><span>1</span><h3>RGSC</h3><p>用 cross-fitted training behavior 衡量候选语义边的推荐效用，并在保持 destination budget 的条件下重分配权重。</p></article>
+        <article><span>2</span><h3>CC-MG</h3><p>把校准后的 item relations 与 observed user-item interactions 放入同一节点空间和共享归一化。</p></article>
+        <article><span>3</span><h3>CSCP</h3><p>复用同一个图算子和表示流，使协同信号与语义信号能在多层路径中自然组合。</p></article>
+      </div>
+      <p class="section-takeaway">单一传播上下文同时减少了分支式稀疏图运算和中间表示维护，并保留从初始身份、多模态 anchor 到高阶组合路径的完整信息。</p>
+    </section>
+
+    <section id="results" class="paper-section">
+      <p class="section-kicker">03 · MAIN RESULTS</p>
+      <h2>在三类 Amazon 多模态推荐数据上保持稳定提升</h2>
+      <p class="section-intro">实验覆盖 Baby、Sports and Outdoors、Clothing Shoes and Jewelry，并使用 Recall@10/20 与 NDCG@10/20 比较协同推荐、图扩散、多模态表示学习和 item-graph 方法。</p>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/ccmgrec-results.png" alt="Overall recommendation performance of CC-MGRec and baselines on Baby, Sports, and Clothing datasets">
+        <figcaption><strong>Table 2 · Overall performance。</strong> CC-MGRec 在三个数据集的检索覆盖与排序质量上均保持一致改进，说明 context coupling 的收益不依赖单一类别或单一 cutoff。</figcaption>
+      </figure>
+    </section>
+
+    <section id="analysis" class="paper-section">
+      <p class="section-kicker">04 · MECHANISM ANALYSIS</p>
+      <h2>校准让语义边更贴近推荐目标，混合路径带来额外收益</h2>
+      <p class="section-intro">论文分别检查 semantic relation 的校准质量、语义拓扑与 utility calibration 的作用，以及 collaborative-semantic products 是否真的参与了最终排序。</p>
+
+      <div class="subsection-title">
+        <span>4.1 · CALIBRATION &amp; GRAPH CONSTRUCTION</span>
+        <h3>行为校准改善边的推荐相关性，语义拓扑提供主要结构增益</h3>
+      </div>
+      <div class="figure-grid analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/ccmgrec-calibration.png" alt="AUC, average precision, and lift of raw, provisional, and calibrated multimodal semantic edge scores">
+          <figcaption><strong>Held-out edge relevance。</strong> 在固定候选支持上，recommendation-grounded calibration 同时改善 AUC、AP 与 positive lift。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/ccmgrec-ablation.png" alt="Ablation of semantic topology and recommendation-grounded utility calibration on three datasets">
+          <figcaption><strong>Topology &amp; calibration ablation。</strong> 去掉 semantic topology 的影响最明显；保留拓扑但取消 utility calibration 也会在三个数据集上持续退化。</figcaption>
+        </figure>
+      </div>
+
+      <div class="subsection-title">
+        <span>4.2 · MIXED-RELATION PROPAGATION</span>
+        <h3>在相同图、归一化与容量下，跨关系组合仍贡献推荐信号</h3>
+      </div>
+      <figure class="research-figure topocor-crossmodal-figure">
+        <img src="../../assets/images/ccmgrec-mixed-paths.png" alt="Recall and NDCG gains from retaining collaborative-semantic mixed paths in CC-MG">
+        <figcaption><strong>Matched no-mixed intervention。</strong> 仅移除 collaborative-semantic products 后，三个数据集的 Recall@20 与 NDCG@20 均下降，直接验证了共享传播上下文中的混合路径价值。</figcaption>
+      </figure>
+      <p class="analysis-conclusion">这些证据共同支持同一结论：CC-MGRec 的提升不只是把多模态表示拼在一起，而是让经过推荐行为校准的异构关系共同决定消息、归一化尺度与中间表示演化。</p>
+    </section>
+
+    <section id="citation" class="paper-section resources-section">
+      <p class="section-kicker">05 · CITATION</p>
+      <h2>引用</h2>
+      <div class="citation-block">
+        <div class="citation-heading"><h3>Citation</h3><button class="icon-button" type="button" data-copy-citation aria-label="Copy citation" title="Copy citation"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <pre><code>@unpublished{wang2027ccmgrec,
+  title  = {Beyond Context-Decoupled Propagation:
+            Context-Coupled Multimodal Graph Learning for Recommendation},
+  author = {Wang, Yumeng and others},
+  note   = {Manuscript in preparation for The Web Conference
+            (WWW 2027)},
+  year   = {2027}
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="paper-footer">
+      <span>CC-MGRec · WWW 2027 Manuscript</span>
+      <a href="../../#publications">Yumeng Wang's Academic Homepage <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>

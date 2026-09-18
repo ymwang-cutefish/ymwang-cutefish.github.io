@@ -328,14 +328,16 @@ a {
 .ssef-paper .paper-visual,
 .screc-paper .paper-visual,
 .topocor-paper .paper-visual,
-.benchmark-paper .paper-visual {
+.benchmark-paper .paper-visual,
+.ccmgrec-paper .paper-visual {
   background: white;
 }
 
 .ssef-paper .paper-visual img,
 .screc-paper .paper-visual img,
 .topocor-paper .paper-visual img,
-.benchmark-paper .paper-visual img {
+.benchmark-paper .paper-visual img,
+.ccmgrec-paper .paper-visual img {
   padding: 11px 7px 7px;
   object-fit: contain;
 }
@@ -350,6 +352,10 @@ a {
 
 .benchmark-paper .paper-visual img {
   padding: 16px 8px 8px;
+}
+
+.ccmgrec-paper .paper-visual img {
+  padding: 14px 8px 8px;
 }
 
 .venue-badge {
