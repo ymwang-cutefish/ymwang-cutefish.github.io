@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SCRec: Hierarchical Simplicial Modeling for Self-Supervised Recommendation.">
+  <meta name="theme-color" content="#ffffff">
+  <title>SCRec | Yumeng Wang's Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=6">
+  <link rel="icon" href="../../assets/images/avatar.png">
+</head>
+<body class="paper-page">
+  <header class="masthead">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="home-link" href="../../#about">Homepage</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="../../#about">About Me</a>
+        <a href="../../#publications">Publications</a>
+        <a href="../../#experience">Experience</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="paper-shell">
+    <div class="paper-toolbar">
+      <a href="../../#publications"><i data-lucide="arrow-left" aria-hidden="true"></i>返回论文列表</a>
+      <span>AAAI 2027 Submission</span>
+    </div>
+
+    <header class="paper-hero">
+      <p class="eyebrow">SELF-SUPERVISED RECOMMENDATION · SIMPLICIAL COMPLEXES</p>
+      <h1>SCRec</h1>
+      <p class="hero-subtitle">以单纯复形刻画推荐系统中的层次化组合语义</p>
+      <p class="hero-authors"><strong>Yumeng Wang</strong> · Qiyao Peng · Mingqiao Zhang · Wenjun Wang · Minglai Shao</p>
+      <p class="hero-paper-title">SCRec: Hierarchical Simplicial Modeling for Self-Supervised Recommendation · AAAI 2027 Conference Submission</p>
+      <div class="hero-actions">
+        <a class="button primary" href="../../assets/papers/screc-aaai27-submission.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
+      </div>
+      <nav class="section-jump five-items" aria-label="章节导航">
+        <a href="#motivation"><span>1</span>研究动机</a>
+        <a href="#method"><span>2</span>方法概述</a>
+        <a href="#results"><span>3</span>推荐表现</a>
+        <a href="#analysis"><span>4</span>分析验证</a>
+        <a href="#citation"><span>5</span>引用</a>
+      </nav>
+    </header>
+
+    <section id="motivation" class="paper-section">
+      <p class="section-kicker">01 · MOTIVATION</p>
+      <h2>推荐行为不只是成对交互，也包含层次化组合关系</h2>
+      <p class="section-intro">协同推荐通常从 user-item 边出发建模，但多个物品之间的共同消费会形成更复杂的组合语义。SCRec 用单纯复形的 downward closure 表达多尺度子集关系，使推荐模型能同时保留局部协同信号与高阶组合结构。</p>
+      <figure class="research-figure screc-motivation-figure">
+        <img src="../../assets/images/screc-motivation.png?v=2" alt="Comparison of pairwise user-item interactions, hypergraphs, motif-based modeling, and simplicial complexes for recommendation">
+        <figcaption><strong>从 pairwise 到 simplicial complexes。</strong> 成对图只描述 dyadic interaction，超图忽略组内子结构，motif 依赖预设模板；单纯复形通过子集闭包刻画层次化组合语义。</figcaption>
+      </figure>
+      <p class="section-takeaway"><strong>核心直觉：</strong>如果一组物品共同出现，它的子集也携带可学习的协同模式；这种层次结构正是单纯复形比扁平超边更适合表达的部分。</p>
+    </section>
+
+    <section id="method" class="paper-section">
+      <p class="section-kicker">02 · METHOD</p>
+      <h2>从推荐数据构造单纯复形，再联合学习局部与全局视图</h2>
+      <p class="section-intro">SCRec 将原始协同交互转化为 recommendation-native simplicial complex，并把局部协同传播、全局 HiPPR 传播和跨视图对齐放在同一个自监督推荐框架中。</p>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/screc-framework.png" alt="SCRec framework with simplicial complex construction, local graph collaborative propagation, HiPPR global view, BPR losses, and local-global alignment">
+        <figcaption><strong>SCRec framework。</strong> 框架包含单纯复形构造、局部图协同传播、vertex-level HiPPR 全局组合视图，以及 view-specific BPR 与 local-global alignment。</figcaption>
+      </figure>
+      <div class="method-steps">
+        <article><span>1</span><h3>Simplicial Construction</h3><p>从共同消费模式中提取高阶 item 组合，并保留由 downward closure 产生的多尺度子集。</p></article>
+        <article><span>2</span><h3>Local &amp; Global Views</h3><p>局部视图保留邻域协同信号；全局视图用 HiPPR 扩展 Personalized PageRank 的长程传播能力。</p></article>
+        <article><span>3</span><h3>Ranking &amp; Alignment</h3><p>通过视图专属 BPR 学习推荐排序，并用异构 local-global alignment 拉近互补表示。</p></article>
+      </div>
+    </section>
+
+    <section id="results" class="paper-section">
+      <p class="section-kicker">03 · MAIN RESULTS</p>
+      <h2>在三类真实推荐数据集上验证推荐效果</h2>
+      <p class="section-intro">实验覆盖 Yelp、Gowalla 与 Tmall，并在 Recall@20/40、NDCG@20/40 上比较图对比学习、超图推荐、拓扑推荐与 motif-based 推荐方法。</p>
+      <figure class="research-figure scroll-figure">
+        <img src="../../assets/images/screc-results.png?v=2" alt="Recommendation performance of SCRec and baseline methods on Yelp, Gowalla, and Tmall">
+        <figcaption><strong>Table 2 · 主结果。</strong> SCRec 在大多数数据集和指标上取得最优表现，并在其余设置中保持竞争力，说明高阶组合语义可有效补充传统协同信号。</figcaption>
+      </figure>
+      <p class="section-takeaway">这些结果更强调“层次化组合建模”带来的稳定收益，而不是单纯依赖某一个数据集或某一种指标的偶然优势。</p>
+    </section>
+
+    <section id="analysis" class="paper-section">
+      <p class="section-kicker">04 · ANALYSIS</p>
+      <h2>从组件、稀疏性、敏感性与可扩展性解释模型行为</h2>
+      <p class="section-intro">除了主结果，论文还从结构分布、消融、低频用户、参数敏感性和计算成本等角度分析 SCRec 的有效性。</p>
+
+      <div class="subsection-title">
+        <span>4.1 · STRUCTURE &amp; ABLATION</span>
+        <h3>构造出的高阶结构与核心模块都对性能有贡献</h3>
+      </div>
+      <div class="figure-grid analysis-grid screc-analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/screc-edge-weights.png" alt="Edge weight distributions for users and items on Yelp, Gowalla, and Tmall">
+          <figcaption><strong>Edge weight distribution。</strong> 三个数据集的高权重组合主要集中在较小阶数，适合用层次化子结构逐步建模。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/screc-ablation.png" alt="Ablation study of SCRec variants without the global view, HiPPR, or simplicial contrastive alignment">
+          <figcaption><strong>Ablation study。</strong> 去掉全局视图、HiPPR 或 simplicial contrastive alignment 都会削弱效果，说明局部传播与高阶全局视图需要协同工作。</figcaption>
+        </figure>
+      </div>
+
+      <div class="subsection-title">
+        <span>4.2 · SPARSITY &amp; SENSITIVITY</span>
+        <h3>低频用户场景收益明显，参数设置整体不敏感</h3>
+      </div>
+      <div class="figure-grid analysis-grid screc-analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/screc-sparsity.png" alt="Performance of SCRec and baselines across user groups with different interaction frequencies">
+          <figcaption><strong>Data sparsity。</strong> 在低频用户组上，SCRec 仍能从高阶组合结构中获得有效补充信息。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/screc-sensitivity.png" alt="Parameter sensitivity analysis of SCRec across multiple datasets">
+          <figcaption><strong>Parameter sensitivity。</strong> 中等范围的传播与对齐参数即可得到稳定表现，模型没有表现出过度脆弱的参数依赖。</figcaption>
+        </figure>
+      </div>
+
+      <div class="subsection-title">
+        <span>4.3 · EFFICIENCY &amp; SCALABILITY</span>
+        <h3>在拓扑推荐基线之外保持更好的计算开销</h3>
+      </div>
+      <div class="figure-grid analysis-grid screc-analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/screc-efficiency-table.png" alt="Accuracy, time, inference, and peak memory comparison among TopoSRL, SSN, and SCRec">
+          <figcaption><strong>Table 3 · Efficiency on Yelp。</strong> 相比改造后的 TopoSRL 与 SSN，SCRec 同时取得更高精度、更低单轮训练时间和更低峰值显存。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/screc-scalability.png" alt="Training time and memory scalability of SCRec under varying graph scale and simplex density">
+          <figcaption><strong>Fig. 7 · Scalability。</strong> 随图规模增长，训练时间上升；峰值显存对 simplex density 的变化更平稳。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="citation" class="paper-section resources-section">
+      <p class="section-kicker">05 · CITATION</p>
+      <h2>引用</h2>
+      <div class="citation-block">
+        <div class="citation-heading"><h3>Citation</h3><button class="icon-button" type="button" data-copy-citation aria-label="Copy citation" title="Copy citation"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <pre><code>@unpublished{wang2027screc,
+  title  = {SCRec: Hierarchical Simplicial Modeling for
+            Self-Supervised Recommendation},
+  author = {Wang, Yumeng and Peng, Qiyao and Zhang, Mingqiao and
+            Wang, Wenjun and Shao, Minglai},
+  note   = {AAAI 2027 Conference Submission},
+  year   = {2027}
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="paper-footer">
+      <span>SCRec · AAAI 2027 Conference Submission</span>
+      <a href="../../#publications">Yumeng Wang's Academic Homepage <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>

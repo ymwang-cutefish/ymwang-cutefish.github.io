@@ -325,13 +325,19 @@ a {
   object-fit: cover;
 }
 
-.ssef-paper .paper-visual {
+.ssef-paper .paper-visual,
+.screc-paper .paper-visual {
   background: white;
 }
 
-.ssef-paper .paper-visual img {
+.ssef-paper .paper-visual img,
+.screc-paper .paper-visual img {
   padding: 11px 7px 7px;
   object-fit: contain;
+}
+
+.screc-paper .paper-visual img {
+  padding: 14px 8px 8px;
 }
 
 .venue-badge {
@@ -857,6 +863,11 @@ a {
   object-fit: contain;
 }
 
+.screc-motivation-figure img {
+  width: min(960px, 100%);
+  margin: 0 auto;
+}
+
 .section-takeaway {
   margin: 22px 0 0;
   padding: 15px 18px;
@@ -1015,6 +1026,10 @@ a {
   height: 300px;
   padding: 8px;
   object-fit: contain;
+}
+
+.screc-analysis-grid img {
+  height: 285px;
 }
 
 .analysis-conclusion {
