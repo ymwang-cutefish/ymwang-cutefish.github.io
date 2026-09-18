@@ -104,8 +104,8 @@
 
     <section id="analysis" class="paper-section">
       <p class="section-kicker">04 · ANALYSIS</p>
-      <h2>组件消融与表示分析共同解释拓扑佐证如何发挥作用</h2>
-      <p class="section-intro">论文进一步检查不同输入结构下的模块分工、闭合证据的注入方式、学习到的表示几何，以及关系权重和邻域规模的稳定性。</p>
+      <h2>从组件、理论性质与结构统计解释拓扑佐证如何发挥作用</h2>
+      <p class="section-intro">论文与补充材料进一步检查不同输入结构下的模块分工、闭合证据的注入方式、学习到的表示几何，以及理论性质、闭合规模、受控基线和超参数稳定性。</p>
 
       <div class="subsection-title">
         <span>4.1 · COMPONENTS &amp; MECHANISMS</span>
@@ -143,7 +143,55 @@
           <figcaption><strong>Neighborhood sensitivity。</strong> 随同配或异配邻域扩大，TopoCor 在更宽范围内保持稳定，而 DMGC 更容易因低置信度边增加而下降。</figcaption>
         </figure>
       </div>
-      <p class="analysis-conclusion">整体证据支持同一结论：TopoCor 的收益不来自简单增加三角形，而来自对交互阶次、成对锚点、跨模态来源和频率角色的联合约束。</p>
+
+      <div class="subsection-title" id="theory-evidence">
+        <span>4.4 · THEORETICAL FOUNDATIONS</span>
+        <h3>闭合通道具有独立信息，同时保持响应有界与成对锚点稳定</h3>
+      </div>
+      <div class="method-steps">
+        <article><span>1</span><h3>Order Separation</h3><p>三角形共成员算子不能由边算子的标量多项式普遍复现，因此 order-2 通道不是更深的成对传播。</p></article>
+        <article><span>2</span><h3>Bounded Response</h3><p>阶特定 Bernstein filter 在谱区间上保持单调、有界且非扩张，避免高阶信号被无约束放大。</p></article>
+        <article><span>3</span><h3>Anchor Preservation</h3><p>理想正交残差精确保留成对高频锚点的对齐分量；数值稳定实现则把偏差控制在可计算的界内。</p></article>
+      </div>
+
+      <div class="subsection-title" id="closure-audit">
+        <span>4.5 · CLOSURE CENSUS &amp; COST</span>
+        <h3>闭合结构广泛存在，并且可以用稀疏构造控制实际开销</h3>
+      </div>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/topocor-supp-closure-audit.png" alt="Exact closure census on multimodal and multi-relational datasets together with the Ele-Fashion construction and memory audit">
+        <figcaption><strong>Supplementary Tables 1–3 · Closure census and audit。</strong> 上表统计多模态数据中的 WMSC triangles、模态联合闭合与 CMCC novel closures；左下给出多关系数据的高频边与三角形覆盖；右下记录最大数据集 Ele-Fashion 的离线构造和显存开销。</figcaption>
+      </figure>
+      <p class="section-takeaway"><strong>实际规模：</strong>CMCC 新发现的跨模态闭合占 union triangles 的 73.44%–97.56%，说明它并非重复单模态三角形；在 97,766 个节点的 Ele-Fashion 上，完整离线构造为 44.7 秒，峰值显存为 19,944 MiB。</p>
+
+      <div class="subsection-title" id="higher-order-controls">
+        <span>4.6 · HIGHER-ORDER CONTROLS</span>
+        <h3>通用高阶消息传递不能替代阶次分离与正交闭合注入</h3>
+      </div>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/topocor-supp-higher-order-controls.png" alt="Controlled comparison of TopoCor with unsupervised adaptations of HGNN and HyperGCN on six datasets">
+        <figcaption><strong>Supplementary Tables 9–10 · Higher-order controls。</strong> 在相同邻域规模、无监督训练目标和五随机种子协议下，HGNN 与 HyperGCN 的适配版本在六个数据集上均落后于 TopoCor，说明“加入高阶结构”本身不足以复现拓扑佐证。</figcaption>
+      </figure>
+
+      <div class="subsection-title" id="supplementary-robustness">
+        <span>4.7 · SUPPORT, LOSS &amp; POLARITY</span>
+        <h3>邻域扩张会真实改变图支撑规模，但损失权重仍有宽稳定区间</h3>
+      </div>
+      <div class="figure-grid analysis-grid topocor-analysis-grid">
+        <figure class="research-figure">
+          <img src="../../assets/images/topocor-supp-support-growth.png" alt="Growth of low-frequency and high-frequency graph supports on DBLP as neighborhood size increases">
+          <figcaption><strong>Supplementary Fig. 1 · Support growth。</strong> DBLP 的参数扫描覆盖约一个数量级的支撑变化：低频边由 9.4k 增至 111.9k，高频边由 3.0k 增至 58.0k。</figcaption>
+        </figure>
+        <figure class="research-figure">
+          <img src="../../assets/images/topocor-supp-loss-sensitivity.png" alt="Amazon accuracy heatmap across the within-modal and cross-modal contrastive loss weights">
+          <figcaption><strong>Supplementary Fig. 2 · Loss-weight sensitivity。</strong> λ=0.1、μ=0.1 取得最高 ACC；其周围多组设置仍接近 0.80，说明两个对齐项在中等权重范围内具有较宽稳定区间。</figcaption>
+        </figure>
+      </div>
+      <figure class="research-figure wide-figure">
+        <img src="../../assets/images/topocor-supp-structural-polarity.png" alt="Label homophily of observed relations and the low-frequency and high-frequency graph supports on four datasets">
+        <figcaption><strong>Supplementary Fig. 3 · Structural polarity。</strong> 在 Amazon、IMDB、ACM 与 Yelp 上，构造出的低频支撑更偏同配，而高频支撑稳定落在异配侧，验证频率分解确实把平滑簇内部与差异边界分离开来。</figcaption>
+      </figure>
+      <p class="analysis-conclusion">整体证据支持同一结论：TopoCor 的收益不来自简单增加三角形，而来自可区分的交互阶次、有界滤波、成对锚点保护、跨模态来源约束，以及与频率角色一致的结构分解。</p>
     </section>
 
     <section id="citation" class="paper-section resources-section">
