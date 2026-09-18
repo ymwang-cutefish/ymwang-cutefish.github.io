@@ -808,6 +808,12 @@ a {
   color: var(--ink);
 }
 
+.ssef-ranking-figure {
+  width: min(920px, 100%);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .figure-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1486,6 +1492,15 @@ a {
   .wide-figure,
   #results > .research-figure:first-of-type {
     overflow-x: auto;
+  }
+
+  .ssef-ranking-figure {
+    overflow: hidden;
+  }
+
+  .ssef-ranking-figure img {
+    width: 100%;
+    max-width: 100%;
   }
 
   .scroll-figure {

@@ -42,6 +42,7 @@
       <div class="hero-actions">
         <a class="button primary" href="../../assets/papers/ssef-ijcai26.pdf"><i data-lucide="file-text" aria-hidden="true"></i>论文 PDF</a>
         <a class="button secondary" href="https://www.ijcai.org/proceedings/2026/359"><i data-lucide="external-link" aria-hidden="true"></i>IJCAI 页面</a>
+        <a class="button secondary" href="https://www.dropbox.com/scl/fo/h7rm3mqqtukzhpjp7ihle/h?rlkey=nlxy0g0fx815xyq8fsxscekwy&amp;dl=0"><i data-lucide="code-2" aria-hidden="true"></i>代码</a>
       </div>
       <nav class="section-jump five-items" aria-label="章节导航">
         <a href="#motivation"><span>1</span>研究问题</a>
@@ -100,7 +101,7 @@
       <p class="section-kicker">03 · FINE-TUNING</p>
       <h2>把预训练表示迁移到专家排序</h2>
       <p class="section-intro">下游阶段分别输入候选专家历史与目标问题，将 [ER]、[QR] 表示拼接后预测匹配分数。</p>
-      <figure class="research-figure wide-figure">
+      <figure class="research-figure wide-figure ssef-ranking-figure">
         <img src="../../assets/images/ssef-finetuning.png" alt="SSEF fine-tuning architecture for expert ranking">
         <figcaption><strong>Fine-tuning for expert ranking。</strong> 双编码器由同一 SSEF 检查点初始化，预测器输出候选专家与目标问题的匹配分数。</figcaption>
       </figure>
