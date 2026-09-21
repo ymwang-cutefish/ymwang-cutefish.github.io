@@ -702,6 +702,11 @@ a {
   margin: 24px auto 0;
 }
 
+.section-jump.three-items {
+  width: min(480px, 100%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .section-jump.five-items {
   width: min(780px, 100%);
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1502,6 +1507,7 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .section-jump.three-items,
   .section-jump.five-items {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
