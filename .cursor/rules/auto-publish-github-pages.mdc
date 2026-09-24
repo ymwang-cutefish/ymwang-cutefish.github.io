@@ -1,0 +1,15 @@
+---
+description: Auto-commit and push ymwang-cutefish.github.io after site changes; verify GitHub Pages live.
+alwaysApply: true
+---
+
+# GitHub Pages auto-publish
+
+When editing this repository (`ymwang-cutefish.github.io`):
+
+- After completing requested site changes, **commit and push to `origin/main` without asking** for separate publish approval.
+- Use concise commit messages focused on why the change was made.
+- After push, wait for GitHub Pages to update and spot-check affected live URLs (cache-busting query if needed).
+- Report the commit SHA and live URLs checked.
+
+First-author paper overview pages (TopoCor, SCRec, HPGNN): hero section-jump nav must **not** include a citation link; keep the bottom `#citation` section.
