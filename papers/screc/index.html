@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/css/style.css?v=9">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
   <link rel="icon" type="image/png" href="/favicon.png?v=2">
   <link rel="shortcut icon" href="/favicon.ico?v=2">
   <link rel="apple-touch-icon" href="/favicon.png?v=2">
@@ -92,7 +92,7 @@
     <section id="analysis" class="paper-section">
       <p class="section-kicker">04 · ANALYSIS</p>
       <h2>从组件、稀疏性、敏感性与可扩展性解释模型行为</h2>
-      <p class="section-intro">除了主结果，论文与补充材料还从结构分布、消融、低频用户、参数敏感性、计算成本与高阶排序机制等角度分析 SCRec 的有效性。</p>
+      <p class="section-intro">除了主结果，论文与补充材料还从结构分布、消融、低频用户、参数敏感性、计算成本与高阶排序机制等角度分析 SCRec 的有效性。其中 <a href="#order-evidence">4.4–4.6</a> 专门回答「为什么最终采用二阶 HiPPR」：先做 1→5 阶传播扫参，再比较一阶/二阶排序、用户 rescue 与高阶 support 上的增益。</p>
 
       <div class="subsection-title">
         <span>4.1 · STRUCTURE &amp; ABLATION</span>
@@ -140,19 +140,21 @@
       </div>
 
       <div class="subsection-title" id="order-evidence">
-        <span>4.4 · WHY TRIANGLE ORDER</span>
-        <h3>三角阶已经捕捉新增排序信号，更高阶结构没有带来成比例收益</h3>
+        <span>4.4 · ORDER SWEEP (1→5)</span>
+        <h3>1 阶到 5 阶 HiPPR 扫参：二阶已拿到主要增益，继续升高阶收益有限</h3>
       </div>
+      <p class="section-intro">补充实验在 Yelp 与 Tmall 上分别训练 order = 1, 2, …, 5 的 HiPPR 传播，并报告各阶单纯形规模与 Recall@20。左轴是 exact simplex counts，右轴是匹配后的排序表现。</p>
       <figure class="research-figure wide-figure">
-        <img src="../../assets/images/screc-supp-order.png" alt="Exact simplex counts and matched Recall at 20 when the trained HiPPR order varies from one to five">
-        <figcaption><strong>Supplementary Fig. 1 · HiPPR order selection。</strong> 从一阶提升到二阶时，Yelp 与 Tmall 的排序性能同时改善；继续增加阶数会引入更稠密的 clique support，但 Tmall 的结果下降，Yelp 在三阶的 Recall@20 也仅比二阶高 0.0005。</figcaption>
+        <img src="../../assets/images/screc-supp-order.png?v=2" alt="Exact simplex counts and matched Recall at 20 when the trained HiPPR order varies from one to five">
+        <figcaption><strong>Supplementary Fig. 1 · HiPPR order selection (1→5)。</strong> 从一阶提升到二阶时，Yelp 与 Tmall 的 Recall@20 同时改善；三阶及更高阶会引入更稠密的 clique support，Tmall 性能回落，Yelp 在三阶仅比二阶高约 0.0005。</figcaption>
       </figure>
       <p class="section-takeaway"><strong>设计取舍：</strong>二阶结构把 triangle-scale co-consumption 纳入传播，已补足成对关系遗漏的组合信号；它在精度接近最优的同时，避免了继续构造和传播更高阶 clique 所带来的额外时间与显存开销。</p>
 
       <div class="subsection-title" id="rescue-evidence">
-        <span>4.5 · HIGHER-ORDER RESCUE</span>
-        <h3>二阶排序视图能把一部分一阶传播遗漏的用户重新带回 Top-20</h3>
+        <span>4.5 · 1ST VS 2ND ORDER RANKING</span>
+        <h3>固定一阶对齐、只把排序升到二阶：部分用户从 Top-20 外被「救回」</h3>
       </div>
+      <p class="section-intro">在扫参之外，论文还做了对照：P1 在一阶 HiPPR 下做 alignment 与 ranking；P12 保留一阶 alignment，仅把 ranking 切到二阶，以隔离「高阶排序」本身的贡献。</p>
       <figure class="research-figure wide-figure">
         <img src="../../assets/images/screc-supp-rescue.png" alt="Higher-order rescue analysis showing rescued users, gains by support quartile, and best-rank lift">
         <figcaption><strong>Supplementary Fig. 2 · Higher-order rescue。</strong> P1 在 alignment 与 ranking 中都使用一阶 HiPPR；P12 保留一阶 alignment，但把 ranking 切换为二阶 HiPPR。在 P1 漏掉的 14,002 名 Yelp 用户中，P12 救回 1,148 名（8.2%），其最佳测试物品的中位排名从 25 提升到 16。</figcaption>
